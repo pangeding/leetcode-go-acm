@@ -32,13 +32,13 @@ func reverseList(head *ListNode) *ListNode{
 		return head
 	}
 	// 2. 开始递归
-	reverseList(head.Next)
+	newHead :=reverseList(head.Next)
 	// 3. 交换
 	// 3.1 实施交换
 	head.Next.Next = head
 	// 3.2 避免循环
 	head.Next = nil
-	return head
+	return newHead
 }
 
 
