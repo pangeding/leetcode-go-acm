@@ -4,6 +4,14 @@ import (
 	"fmt"
 )
 
+/**
+* note: what is append?
+* built-in function
+* it can append 1 or many elements to the slice
+*/
+
+
+
 type ListNode struct {
 	Val int
 	Next *ListNode
@@ -21,7 +29,6 @@ func swapPairs(head *ListNode) *ListNode {
 		prev.Next = second
 		first.Next = second.Next
 		second.Next = first
-
 
 		prev = first
 	}
