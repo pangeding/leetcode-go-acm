@@ -10,7 +10,17 @@ type ListNode struct {
 }
 
 func swapPairs(head *ListNode) *ListNode {
-	return nil
+	dummy := &ListNode{Next: head}
+	prev := dummy
+
+	for prev.Next != nil && prev.Next.Next != nil {
+		first := prev.Next
+		second := prev.Next.Next
+
+		prev = first
+	}
+	
+	return dummy.Next
 }
 
 func buildList(nums []int) *ListNode {
