@@ -4,6 +4,23 @@ import (
 	"fmt"
 )
 
+type ListNode struct {
+	Val int
+	Next *ListNode
+}
+
+func swapPairs(head *ListNode) *ListNode {
+	return nil
+}
+
+func buildList(nums []int) *ListNode {
+	return nil
+}
+
+func printList(head *ListNode) {
+
+}
+
 func main() {
 	var n int
 	fmt.Scan(&n) // read the number of the node
