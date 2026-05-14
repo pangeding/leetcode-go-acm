@@ -17,9 +17,15 @@ func swapPairs(head *ListNode) *ListNode {
 		first := prev.Next
 		second := prev.Next.Next
 
+		// change
+		prev.Next = second
+		first.Next = second.Next
+		second.Next = first
+
+
 		prev = first
 	}
-	
+	// return 
 	return dummy.Next
 }
 
