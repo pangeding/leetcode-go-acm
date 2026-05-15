@@ -40,8 +40,9 @@ func buildList(nums []int) *ListNode {
 	if len(nums) == 0 {
 		return nil
 	}
-	
-	return nil
+	head := &ListNode{Val: nums[0]}
+
+	return head
 }
 
 func printList(head *ListNode) {
