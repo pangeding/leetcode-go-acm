@@ -2,6 +2,7 @@ package swapNode
 
 import (
 	"fmt"
+	"strings"
 )
 
 /**
@@ -50,7 +51,9 @@ func buildList(nums []int) *ListNode {
 }
 
 func printList(head *ListNode) {
-	
+	var out []string
+
+	fmt.Println(strings.Join(out, " "))
 }
 
 func main() {
