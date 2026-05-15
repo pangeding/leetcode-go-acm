@@ -41,12 +41,16 @@ func buildList(nums []int) *ListNode {
 		return nil
 	}
 	head := &ListNode{Val: nums[0]}
-
+	cur := head
+	for i := 1; i < len(nums); i++ {
+		cur.Next = &ListNode{Val: nums[i]}
+		cur = cur.Next
+	}
 	return head
 }
 
 func printList(head *ListNode) {
-
+	
 }
 
 func main() {
