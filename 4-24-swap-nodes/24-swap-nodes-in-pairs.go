@@ -37,6 +37,10 @@ func swapPairs(head *ListNode) *ListNode {
 }
 
 func buildList(nums []int) *ListNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	
 	return nil
 }
 
