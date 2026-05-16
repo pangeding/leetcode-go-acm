@@ -1,4 +1,4 @@
-package swapNode
+package main
 
 import (
 	"fmt"
