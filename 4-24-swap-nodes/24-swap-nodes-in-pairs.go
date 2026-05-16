@@ -3,6 +3,7 @@ package swapNode
 import (
 	"fmt"
 	"strings"
+	"strconv"
 )
 
 /**
@@ -52,7 +53,10 @@ func buildList(nums []int) *ListNode {
 
 func printList(head *ListNode) {
 	var out []string
-
+	for head != nil {
+		out = append(out, strconv.Itoa(head.Val))
+		head = head.Next
+	}
 	fmt.Println(strings.Join(out, " "))
 }
 
