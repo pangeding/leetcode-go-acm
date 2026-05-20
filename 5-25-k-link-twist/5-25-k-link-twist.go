@@ -1,5 +1,15 @@
 package main
 
+/** 
+2 mistakes:
+
+first: tail == nil then we should return, if we return at tail != nil ,we just randomly return
+
+secondly, we should use reverse(head, tail.Next) because the reverse function cope with the [) interval
+
+thirdly when continuing the loop, we should not use prev = nextHead, head = nextHead.Next. we should use prev = head, 
+head = nextHead
+*/
 type ListNode struct {
 	Val int
 	Next *ListNode
