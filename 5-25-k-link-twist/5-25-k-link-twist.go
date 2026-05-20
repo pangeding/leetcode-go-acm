@@ -31,12 +31,12 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 	prev := dummy	
 
 	for head != nil {
-		tail := head
+		tail := prev
 		// reverse
 		// find the tail
 		for i := 0; i < k; i++ {
 			tail = tail.Next
-			if tail != nil {
+			if tail == nil {
 				return dummy.Next
 			}
 		}
@@ -48,14 +48,15 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 		nextHead := tail.Next
 
 		// reverse
-		newHead := reverse(head, tail)
+		newHead := reverse(head, tail.Next)
 
 		// reconnect the linkList
 		prev.Next = newHead
 		head.Next = nextHead
 
 		// continue the next loop
-		prev = nextHead
+		prev = head
+		head = nextHead
 	}
 	
 
