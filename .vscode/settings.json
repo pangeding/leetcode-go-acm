@@ -1,4 +1,7 @@
 {
     "Lingma.cloudModelEnable": false,
-    "go.goroot": "/usr/local/go"
+    "go.goroot": "/usr/local/go",
+    "QoderCN.cloudModelAutoTriggerDisplayRule": false,
+    "QoderCN.cloudModelAutoTriggerGenerateLength": "disable",
+    "QoderCN.cloudModelEnable": false
 }

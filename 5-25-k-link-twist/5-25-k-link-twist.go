@@ -1,7 +1,15 @@
 package main
 
+import (
+	"fmt";
+	"strconv";
+	"strings";
+
+	"bufio";
+	"os";
+)
 /** 
-2 mistakes:
+3 mistakes:
 
 first: tail == nil then we should return, if we return at tail != nil ,we just randomly return
 
@@ -74,6 +82,99 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 	return dummy.Next
 }
 
+func buildList(nums []int) *ListNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	// since the 0 doesn't necessarily 
+	head := &ListNode{Val: nums[0]}
+	cur := head
+	for i := 1; i < len(nums); i++ {
+		cur.Next = &ListNode{Val: nums[i]}
+		cur = cur.Next
+	}
+	return head
+}
+
+/**
+ * printList vs printListV2 的区别：
+ * 
+ * 1. 切片初始化方式不同：
+ *    - printList:   var out []string          // 声明为 nil 切片
+ *    - printListV2: out := make([]string, 0)  // 创建长度为 0 的空切片
+ * 
+ * 4. 最佳实践：
+ *    - 推荐 printListV2 的写法（make([]string, 0)）
+ *    - 更明确地表达"需要一个空切片"的意图
+ *    - 避免 nil 切片在某些边界情况下的意外行为
+ */
+func printList(head *ListNode) {
+	var out []string
+	for head != nil {
+		out = append(out, strconv.Itoa(head.Val))
+		head = head.Next
+	}
+	fmt.Println(strings.Join(out, " "))
+}
+
+func printListV2(head *ListNode) {
+	out := make([]string, 0)
+	for head != nil {
+		out = append(out, strconv.Itoa(head.Val))
+		head = head.Next
+	}
+	fmt.Println(strings.Join(out, " "))
+}
+
+func usingScan() {
+	var n int
+	fmt.Scan(&n)
+
+	// 先读取链表元素
+	var nums []int
+	for i := 0; i < n; i++ {
+		var val int
+		fmt.Scan(&val)
+		nums = append(nums, val)
+	}
+
+	// 再读取 k 值
+	var k int
+	fmt.Scan(&k)
+
+	head := buildList(nums)
+	newHead := reverseKGroup(head, k)
+	printList(newHead)
+}
+
+func usingBuffer() {
+	// 这2行代码都是什么意思？
+	// 为什么Scanwords就可以表示空格，也没说啊
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Split(bufio.ScanWords)
+
+	// 读取节点个数
+	scanner.Scan()
+	// 这种什么意思？
+	n, _ := strconv.Atoi(scanner.Text())
+
+	// 读取链表元素
+	nums := make([]int, n)
+	for i := 0; i < n; i++ {
+		scanner.Scan()
+		nums[i], _ = strconv.Atoi(scanner.Text())
+	}
+
+	// 读取 k 值
+	scanner.Scan()
+	k, _ := strconv.Atoi(scanner.Text()) 
+
+	head := buildList(nums)
+	newHead := reverseKGroup(head, k)
+	printList(newHead)
+}
+
 func main() {
-	
+	// usingScan()
+	usingBuffer()
 }
