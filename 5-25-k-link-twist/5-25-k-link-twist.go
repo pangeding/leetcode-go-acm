@@ -170,10 +170,62 @@ func usingBuffer() {
 	k, _ := strconv.Atoi(scanner.Text()) 
 
 	head := buildList(nums)
-	newHead := reverseKGroup(head, k)
+	newHead := reverseKGroupV2(head, k)
 	printList(newHead)
 }
 
+func reverseV2(head *ListNode, tail *ListNode) *ListNode {
+	var prev *ListNode
+	// cur
+	cur := head
+	// start the change
+	for cur != tail {
+		next := cur.Next
+		cur.Next = prev
+		prev = cur
+		cur = next
+	}
+	// return
+	return prev
+}
+
+func reverseKGroupV2(head *ListNode, k int) *ListNode {
+	// 边界情况
+	if head == nil {
+		return head
+	}
+
+	// no need to define the dummy, since it is 迭代
+	cur := head
+
+	// 看还有没有k个节点
+	for cur != nil {
+		for i := 0; i < k; i++ {
+			// cur 可能先
+			/**cur = cur.Next
+			if cur == nil {
+				return head
+			}
+				it is not fair. 最后一个明明符合要求还被淘汰掉了
+			*/
+			if cur == nil {
+				return head
+			}
+			cur = cur.Next
+		}
+	}
+
+	// 没有k个节点就返回
+
+	// 有 k 个节点就递归解决
+	newHead := reverseV2(head, cur)
+
+	// 进入下一个流程
+	head.Next = reverseKGroupV2(cur, k)
+
+	// return
+	return newHead
+}
 func main() {
 	// usingScan()
 	usingBuffer()

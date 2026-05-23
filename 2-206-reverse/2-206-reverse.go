@@ -4,7 +4,7 @@ type ListNode struct {
 	Val int
 	Next *ListNode
 }
-/**
+
 func reverseList(head *ListNode) *ListNode{
 	// 0. 迭代
 
@@ -23,9 +23,8 @@ func reverseList(head *ListNode) *ListNode{
 
 	return prev
 }
-*/
 
-func reverseList(head *ListNode) *ListNode{
+func reverseListV2(head *ListNode) *ListNode{
 	// 0. 递归
 	// 1. 递归边界情况
 	if head == nil || head.Next == nil {
