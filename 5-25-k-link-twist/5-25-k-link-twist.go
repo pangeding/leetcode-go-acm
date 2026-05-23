@@ -199,8 +199,7 @@ func reverseKGroupV2(head *ListNode, k int) *ListNode {
 	cur := head
 
 	// 看还有没有k个节点
-	for cur != nil {
-		for i := 0; i < k; i++ {
+	for i := 0; i < k; i++ {
 			// cur 可能先
 			/**cur = cur.Next
 			if cur == nil {
@@ -208,11 +207,10 @@ func reverseKGroupV2(head *ListNode, k int) *ListNode {
 			}
 				it is not fair. 最后一个明明符合要求还被淘汰掉了
 			*/
-			if cur == nil {
-				return head
-			}
-			cur = cur.Next
+		if cur == nil {
+			return head
 		}
+		cur = cur.Next
 	}
 
 	// 没有k个节点就返回
