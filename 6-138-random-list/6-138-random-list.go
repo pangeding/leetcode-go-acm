@@ -44,7 +44,9 @@ func copyRandomListV2(head *Node) *Node {
 		copy := &Node{Val: cur.Val}
 		copy.Next = cur.Next
 		cur.Next = copy
-		cur = cur.Next 
+		// cur = cur.Next 
+		// use cur = cur.Next 就在同一个节点后面不断插入新的节点，所以不行
+		cur = copy.Next
 	}
 
 	// add the Next and Random relation
