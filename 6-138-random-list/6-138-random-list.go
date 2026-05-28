@@ -33,6 +33,7 @@ func copyRandomList(head *Node) *Node {
 	return m[head]
 }
 
+// why it is wrong?
 func copyRandomListV2(head *Node) *Node {
 	if head == nil {
 		return nil 
