@@ -73,6 +73,6 @@ func copyRandomListV2(head *Node) *Node {
 	return newHead 
 }
 func main() {
-
+	// to complicated, next cycle
 }
 
