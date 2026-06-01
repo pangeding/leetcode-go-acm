@@ -1,5 +1,10 @@
 package main
 
+import (
+	"os";
+	"bufio"
+)
+
 
 type Node struct {
 	Val int
@@ -74,5 +79,151 @@ func copyRandomListV2(head *Node) *Node {
 }
 func main() {
 	// to complicated, next cycle
+	scanner := bufio.NewScanner(os.Stdin)
+
 }
+
+/**
+copy.Next = copy.Next.Next
+
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x8 pc=0x4c153a]
+main.copyRandomList(0xc000012018)
+solution.go, line 30
+main.__helper__(...)
+solution.go, line 193
+main.main()
+solution.go, line 229
+*/
+func copyRandomListV3False(head *Node) *Node {
+	// 原地
+	// 0. corner case
+
+	// 1. add val
+	cur := head
+	for cur != nil {
+		copy := &Node{Val: cur.Val}
+		copy.Next = cur.Next
+		cur.Next = copy
+		cur = copy.Next
+	}
+
+	// 2. add the random 
+	cur = head 
+	for cur != nil {
+		if cur.Random != nil {
+			cur.Next.Random = cur.Random.Next
+		}
+		cur = cur.Next.Next
+	}
+
+	// 3. 抓出来 构建next
+	newHead := head.Next
+	cur = head 
+	for cur != nil {
+		// ???
+		copy := cur.Next
+		cur.Next = copy.Next
+		// this line is wrong!!!
+		copy.Next = copy.Next.Next
+		cur = cur.Next
+	}
+
+	// 4. return
+	return newHead
+}
+
+/**
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x8 pc=0x4c14fa]
+main.copyRandomList(0x0)
+solution.go, line 24
+main.__helper__(...)
+solution.go, line 194
+main.main()
+solution.go, line 230
+
+null pointer exception
+*/
+func copyRandomListV4(head *Node) *Node {
+	// 原地
+	// 0. corner case
+
+	// 1. add val
+	cur := head
+	for cur != nil {
+		copy := &Node{Val: cur.Val}
+		copy.Next = cur.Next
+		cur.Next = copy
+		cur = copy.Next
+	}
+
+	// 2. add the random 
+	cur = head 
+	for cur != nil {
+		if cur.Random != nil {
+			cur.Next.Random = cur.Random.Next
+		}
+		cur = cur.Next.Next
+	}
+
+	// 3. 抓出来 构建next
+	newHead := head.Next
+	cur = head 
+	for cur != nil {
+		copy := cur.Next
+		cur.Next = copy.Next
+		if copy.Next != nil {
+			copy.Next = copy.Next.Next
+		}
+		cur = cur.Next
+	}
+
+	// 4. return
+	return newHead
+}
+
+
+
+func copyRandomListV5(head *Node) *Node {
+	// 原地
+	// 0. corner case
+	if head == nil {
+		return head
+	}
+
+	// 1. add val
+	cur := head
+	for cur != nil {
+		copy := &Node{Val: cur.Val}
+		copy.Next = cur.Next
+		cur.Next = copy
+		cur = copy.Next
+	}
+
+	// 2. add the random 
+	cur = head 
+	for cur != nil {
+		if cur.Random != nil {
+			cur.Next.Random = cur.Random.Next
+		}
+		cur = cur.Next.Next
+	}
+
+	// 3. 抓出来 构建next
+	newHead := head.Next
+	cur = head 
+	for cur != nil {
+		copy := cur.Next
+		cur.Next = copy.Next
+		if copy.Next != nil {
+			copy.Next = copy.Next.Next
+		}
+		cur = cur.Next
+	}
+
+	// 4. return
+	return newHead
+}
+
 
