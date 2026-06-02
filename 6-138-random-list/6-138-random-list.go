@@ -2,7 +2,11 @@ package main
 
 import (
 	"os";
-	"bufio"
+	"bufio";
+	"strconv";
+	"strings";
+	"fmt";
+
 )
 
 
@@ -77,9 +81,81 @@ func copyRandomListV2(head *Node) *Node {
 
 	return newHead 
 }
+
+func buildList(n int, data [][2]int) *Node {
+	// 0. corner case
+	if n == 0 {
+		return nil
+	}
+
+	// 0.5 where to store the nodes
+	nodes := make([]*Node, n)
+
+	// 1. val
+	for i := 0; i < n; i++ {
+		nodes[i] = &Node{Val: data[i][0]}
+	}
+
+	// 2. Next 
+	for i := 0; i < n - 1; i++ {
+		nodes[i].Next = nodes[i + 1]
+	}
+
+	for i := 0; i < n; i++ {
+		if data[i][1] != -1 {
+			nodes[i].Random = nodes[data[i][1]]
+		}
+	}
+
+	// 3. Random 
+
+	// 4. return
+	return nodes[0]
+}
+
+func printList(head *Node) {
+	// 0. define 
+	out := []string{}
+	cur := head 
+
+	for cur != nil {
+		var randomVal string
+		if cur.Random == nil {
+			randomVal = "null"
+		}else {
+			randomVal = strconv.Itoa(cur.Random.Val) 
+		} 		
+		out = append(out, fmt.Sprintf("[%d, %s]", cur.Val, randomVal))
+		cur = cur.Next
+	}
+
+	fmt.Println(strings.Join(out, " "))
+}
 func main() {
 	// to complicated, next cycle
 	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Split(bufio.ScanWords)
+
+	// 读取节点个数
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
+
+	data := make([][2]int, n)
+
+	for i := 0; i < n; i++ {
+		scanner.Scan()
+		val, _ := strconv.Atoi(scanner.Text())
+
+		scanner.Scan()
+		randomIdx, _ := strconv.Atoi(scanner.Text())
+
+		data[i] = [2]int{val, randomIdx}
+	}
+
+	original := buildList(n, data)
+	copied := copyRandomList(original)
+	printList(copied)
+
 
 }
 
