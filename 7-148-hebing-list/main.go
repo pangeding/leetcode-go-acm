@@ -72,6 +72,10 @@ func merge(l1 *ListNode, l2 *ListNode) *ListNode {
 /**
 错误了？？改0为1？
 */
+
+/**
+unsolved
+*/
 func sortList(head *ListNode) *ListNode {
 	// 1. corner case
 	if head == nil || head.Next == nil {
@@ -99,7 +103,7 @@ func sortList(head *ListNode) *ListNode {
 		for cur != nil {
 			// 4.3 find the head1
 			head1 := cur 
-			for i := 0; i < subLen && cur.Next != nil; i++ {
+			for i := 1; i < subLen && cur.Next != nil; i++ {
 				cur = cur.Next 
 			}
 
