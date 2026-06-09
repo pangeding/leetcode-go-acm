@@ -6,7 +6,7 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func sortList(head *ListNode) *ListNode {
+func sortListV1(head *ListNode) *ListNode {
 	// 1. corner case 
 	if head == nil || head.Next == nil {
 		return head
@@ -62,4 +62,108 @@ func merge(l1 *ListNode, l2 *ListNode) *ListNode {
 	return dummy.Next
 }
 
-// 2. 
+// 2. 自顶向上归并排序
+
+/**
+规避了递归带来的 logn 空间
+空间复杂度降低为 1
+*/
+
+/**
+错误了？？改0为1？
+*/
+func sortList(head *ListNode) *ListNode {
+	// 1. corner case
+	if head == nil || head.Next == nil {
+		return head 
+	}
+
+	// 2. count the length of the List
+	length := 0
+	cur := head 
+	for cur != nil {
+		length++
+		cur = cur.Next 
+	}
+
+	// 3. define the dummy node
+	dummy := &ListNode{Next: head}
+
+	// 4. cycle 
+	for subLen := 1; subLen < length; subLen<<=1 {
+		// 4.1 define the prev and cur
+		prev := dummy 
+		cur := dummy.Next 
+
+		// 4.2 inner cycle 
+		for cur != nil {
+			// 4.3 find the head1
+			head1 := cur 
+			for i := 0; i < subLen && cur.Next != nil; i++ {
+				cur = cur.Next 
+			}
+
+			// 4.4 find the head2
+			head2 := cur.Next 
+			// 4.5 the next of the cur is nil
+			cur.Next = nil
+			// 4.6 set the cur as head2
+			cur = head2 
+
+			// 4.7 移动 cur 到第二段末尾
+			for i := 1; i < subLen && cur != nil && cur.Next != nil; i++ {
+				cur = cur.Next
+			}
+
+			var next *ListNode 
+			if cur != nil {
+				next = cur.Next 
+				cur.Next = nil // 断开第二段
+			}
+
+			// 合并 head1 和 head2
+			merged := merge1(head1, head2) 
+			// 连接到已经排序的部分
+			prev.Next = merged
+
+			// 移动 prev 到当前合并段的末尾，准备下一轮连接
+			for prev.Next != nil {
+				prev = prev.Next 
+			}
+			cur = next 
+
+
+		}
+	}
+	return dummy.Next
+}
+
+func merge1(l1 *ListNode, l2 *ListNode) *ListNode {
+	// 0. corner
+	dummy := &ListNode{}
+	cur := dummy
+
+	// 1. merge
+	for l1 != nil && l2 != nil {
+		if l1.Val < l2.Val {
+			cur.Next = l1 
+			l1 = l1.Next 
+		} else {
+			cur.Next = l2 
+			l2 = l2.Next
+		}
+		cur = cur.Next
+	}
+
+	// 2. tail
+	if l1 != nil {
+		cur.Next = l1
+	}
+
+	if l2 != nil {
+		cur.Next = l2
+	}
+
+	// 3. return 
+	return dummy.Next
+}
