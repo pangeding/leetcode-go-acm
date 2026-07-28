@@ -13,7 +13,11 @@ func pathSum(root *TreeNode, targetSum int) int {
 	}
 
 	// start recursive
-	return dfs(root, targetSum)
+
+	// return dfs(root, targetSum)
+	// this is wrong! not considering dfs is only the methodsNum root is the start. 
+	// return dfs(root, targetSum) + pathSum(root.Left, targetSum - root.Val) + pathSum(root.Right, targetSum - root.Val)
+	return dfs(root, targetSum) + pathSum(root.Left, targetSum) + pathSum(root.Right, targetSum)
 }
 
 /**
