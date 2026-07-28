@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财富计算器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+    color: #1a1a2e;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
+  .card h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #1a1a2e;
+    border-bottom: 2px solid #4f46e5;
+    padding-bottom: 8px;
+  }
+  .form-group {
+    margin-bottom: 12px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color .2s;
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,.1);
+  }
+  .input-with-unit {
+    position: relative;
+  }
+  .input-with-unit .unit {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #999;
+    pointer-events: none;
+  }
+  .input-with-unit input {
+    padding-right: 40px;
+  }
+  button {
+    width: 100%;
+    padding: 11px 20px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background .2s;
+  }
+  button:hover { background: #4338ca; }
+  button:disabled { background: #9ca3af; cursor: not-allowed; }
+  .result {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f0fdf4;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .result.error { background: #fef2f2; color: #b91c1c; }
+  .result .highlight {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4f46e5;
+  }
+  .breakdown {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    margin-bottom: 24px;
+  }
+  .breakdown h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #1a1a2e;
+  }
+  .breakdown table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .breakdown th, .breakdown td {
+    padding: 8px 10px;
+    text-align: right;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .breakdown th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #666;
+    position: sticky;
+    top: 0;
+  }
+  .breakdown td:first-child,
+  .breakdown th:first-child {
+    text-align: center;
+  }
+  .formula-row td {
+    font-size: 12px;
+    color: #666;
+    text-align: left;
+    padding-top: 2px;
+    padding-bottom: 10px;
+    font-family: "Cascadia Code", "Fira Code", monospace;
+  }
+  .breakdown-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>💰 财富计算器</h1>
+
+  <div class="cards">
+    <div class="card">
+      <h2>📅 计算需要多少年</h2>
+      <div class="form-group">
+        <label>目标金额</label>
+        <div class="input-with-unit">
+          <input type="number" id="target" placeholder="如: 1000000" step="1">
+          <span class="unit">元</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>月工资收入</label>
+        <div class="input-with-unit">
+          <input type="number" id="monthly" placeholder="如: 15000" step="1">
+          <span class="unit">元/月</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>年终奖</label>
+        <div class="input-with-unit">
+          <input type="number" id="bonus" placeholder="如: 30000" step="1">
+          <span class="unit">元</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>理财年化收益率</label>
+        <div class="input-with-unit">
+          <input type="number" id="rate" placeholder="如: 10" step="0.1" value="0">
+          <span class="unit">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>初始本金（可选）</label>
+        <div class="input-with-unit">
+          <input type="number" id="initial" placeholder="如: 0" step="1" value="0">
+          <span class="unit">元</span>
+        </div>
+      </div>
+      <button onclick="calcYears()">计算</button>
+      <div id="yearsResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>🔮 计算N年后有多少钱</h2>
+      <div class="form-group">
+        <label>经过年数</label>
+        <div class="input-with-unit">
+          <input type="number" id="years" placeholder="如: 10" step="1" min="1">
+          <span class="unit">年</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>月工资收入</label>
+        <div class="input-with-unit">
+          <input type="number" id="monthly2" placeholder="如: 15000" step="1">
+          <span class="unit">元/月</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>年终奖</label>
+        <div class="input-with-unit">
+          <input type="number" id="bonus2" placeholder="如: 30000" step="1">
+          <span class="unit">元</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>理财年化收益率</label>
+        <div class="input-with-unit">
+          <input type="number" id="rate2" placeholder="如: 10" step="0.1" value="0">
+          <span class="unit">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>初始本金（可选）</label>
+        <div class="input-with-unit">
+          <input type="number" id="initial2" placeholder="如: 0" step="1" value="0">
+          <span class="unit">元</span>
+        </div>
+      </div>
+      <button onclick="calcAfterYears()">计算</button>
+      <div id="afterResult"></div>
+    </div>
+  </div>
+
+  <div class="breakdown" id="breakdownSection" style="display:none">
+    <h2>📊 逐年明细</h2>
+    <div class="breakdown-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>年份</th>
+            <th>年初余额</th>
+            <th>理财收益</th>
+            <th>年收入</th>
+            <th>年末余额</th>
+          </tr>
+        </thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function fmt(v) {
+  let s = Math.round(v).toString();
+  let r = '', n = s.length;
+  for (let i = 0; i < n; i++) {
+    if (i > 0 && (n - i) % 3 === 0) r += ',';
+    r += s[i];
+  }
+  return r;
+}
+
+function fmtRate(r) {
+  return (1 + r).toFixed(4);
+}
+
+function renderResult(elId, data, highlight) {
+  const el = document.getElementById(elId);
+  if (!data || data.error) {
+    el.innerHTML = '<div class="result error">' + (data ? data.error : '请求失败') + '</div>';
+    return;
+  }
+  const h = highlight ? '<span class="highlight">' + highlight + '</span>' : '';
+  el.innerHTML = '<div class="result">' + h + '</div>';
+}
+
+function renderBreakdown(details) {
+  const section = document.getElementById('breakdownSection');
+  const tbody = document.getElementById('breakdownBody');
+  if (!details || details.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  let html = '';
+  for (const d of details) {
+    html += '<tr>';
+    html += '<td><b>第' + d.year + '年</b></td>';
+    html += '<td>' + fmt(d.startBalance) + '</td>';
+    html += '<td>' + fmt(d.interest) + '</td>';
+    html += '<td>' + fmt(d.annualIncome) + '</td>';
+    html += '<td>' + fmt(d.endBalance) + '</td>';
+    html += '</tr>';
+    html += '<tr class="formula-row"><td></td><td colspan="4">→ ' + d.formula + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+async function calcYears() {
+  const target = document.getElementById('target').value;
+  const monthly = document.getElementById('monthly').value;
+  const bonus = document.getElementById('bonus').value;
+  const rate = parseFloat(document.getElementById('rate').value || 0) / 100;
+  const initial = document.getElementById('initial').value || 0;
+
+  try {
+    const resp = await fetch('/api/how-many-years?' + new URLSearchParams({
+      target, monthly, bonus, rate: rate.toString(), initial
+    }));
+    const data = await resp.json();
+    if (data.error) {
+      renderResult('yearsResult', data);
+      renderBreakdown(null);
+    } else {
+      renderResult('yearsResult', data,
+        '需要 <b>' + data.years + '</b> 年 达到目标金额 <b>' + fmt(parseFloat(target)) + '</b> 元');
+      renderBreakdown(data.details);
+    }
+  } catch (e) {
+    renderResult('yearsResult', { error: '网络请求失败: ' + e.message });
+    renderBreakdown(null);
+  }
+}
+
+async function calcAfterYears() {
+  const years = document.getElementById('years').value;
+  const monthly = document.getElementById('monthly2').value;
+  const bonus = document.getElementById('bonus2').value;
+  const rate = parseFloat(document.getElementById('rate2').value || 0) / 100;
+  const initial = document.getElementById('initial2').value || 0;
+
+  try {
+    const resp = await fetch('/api/after-years?' + new URLSearchParams({
+      years, monthly, bonus, rate: rate.toString(), initial
+    }));
+    const data = await resp.json();
+    if (data.error) {
+      renderResult('afterResult', data);
+      renderBreakdown(null);
+    } else {
+      renderResult('afterResult', data,
+        years + ' 年后将有 <b>' + fmt(data.finalAmount) + '</b> 元');
+      renderBreakdown(data.details);
+    }
+  } catch (e) {
+    renderResult('afterResult', { error: '网络请求失败: ' + e.message });
+    renderBreakdown(null);
+  }
+}
+</script>
+</body>
+</html>
